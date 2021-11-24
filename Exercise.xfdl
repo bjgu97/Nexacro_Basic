@@ -1,0 +1,225 @@
+// Exercise 1 ================================================================
+// Exe 1-1
+this.btn_Exe1_1_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	
+	var nColCnt = this.Dataset1.getColCount();
+	var nRowCnt = this.Dataset1.getRowCount();
+	
+	var colIdArray = new Array();
+	
+	for(var i = 0; i < nColCnt; i++) {
+		var colId = this.Dataset1.getColID(i);
+		colIdArray.push(colId);
+	}
+	
+	this.txtRtn1.set_value("데이터셋의 칼럼 개수: " + nColCnt + 
+						   ", 데이터셋의 레코드 개수: " + nRowCnt + 
+						   ", 칼럼명: " + colIdArray);
+
+
+};
+
+// Exe 1-2
+this.btn_Exe1_2_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.Dataset1.addColumn("COL_CHK1", "STRING");
+};
+
+// Exercise 2 ================================================================
+// Exe 2-1
+this.btn_Exe2_1_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var nRow = this.Dataset1.findRow("EMPL_ID", "KR120");
+	var sVal = this.Dataset1.getColumn(nRow, "FULL_NAME");
+	this.txtRtn1.set_value("사원번호가 KR120인 사원의 성명: " + sVal);
+};
+
+// Exe 2-2
+this.btn_Exe2_2_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var nRow = this.Dataset1.findRowExpr("DEPT_CODE=='K10'&&SALARY<=5000");
+	var sVal = this.Dataset1.getColumn(nRow, "FULL_NAME");
+	this.txtRtn1.set_value("부서코드가 K10이고 급여가 5000 이하인 사원: " + sVal);
+};
+
+// Exe 2-3
+this.btn_Exe2_3_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var arr = new Array();
+	var arrRow = this.Dataset1.extractRows("DEPT_CODE=='K10'");
+	for(var i = 0; i < arrRow.length; i++) {
+		arr.push(this.Dataset1.getColumn(arrRow[i], "FULL_NAME"));
+	}
+	
+	this.txtRtn1.set_value("부서가 K10인 사원 목록: " + arr);
+};
+
+// Exercise 3 ================================================================
+// Exe 3-1
+this.btn_Exe3_1_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 남자
+	var nAvgM = this.Dataset1.getCaseAvg("GENDER=='M'", "SALARY");
+	
+	// 여자
+	var nAvgW = this.Dataset1.getCaseAvg("GENDER=='W'", "SALARY");
+	var nAvgW2 = this.Dataset1.getCaseAvg("GENDER=='W'", "SALARY",0, -1, false); // Null/Nan 값 제외
+	
+	// 반올림
+	var nAvgMRound = Math.round(nAvgM, 2);
+	
+	this.txtRtn1.set_value("남성과 여성의 평균 급여: " + nAvgMRound + "," + nAvgW + "," + nAvgW2);
+};
+
+// Exe 3-2
+this.btn_Exe3_2_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var avg = this.Dataset1.getAvg("SALARY+BONUS");
+	
+	this.txtRtn1.set_value("금여와 보너스를 합친 금액의 평균 금액: " + avg);
+};
+
+// Exe 3-3
+this.btn_Exe3_3_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 입사일 기준 내림차순 정렬
+	this.Dataset1.set_keystring("S:-HIRE_DATE");
+};
+
+// Exe 3-4
+this.btn_Exe3_4_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 남성이고 미혼인 데이터만 필터하여 표현
+	this.Dataset1.filter("GENDER=='M'&&MARRIED=='0'");
+};
+
+// Exe 3-5
+this.btn_Exe3_5_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 원본 레코드 개수와 필터해서 보이는 레코드 개수 비교
+	// 원본 레코드 개수
+	var nCnt = this.Dataset1.getRowCountNF();
+	// 필터해서 보이는 레코드 개수
+	var nCntN = this.Dataset1.getRowCount();
+	trace("nCnt, nCntN: " + nCnt + "," + nCntN);
+	this.txtRtn1.set_value("원본 레코드 개수와 필터해서 보이는 레코드 개수: " + nCnt + "," + nCntN);
+};
+
+
+this.btn_Exe3_Filter_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+    // like filter --> String.indexOf()
+	var sText = "e";
+
+};
+
+
+// Exercise 4 ================================================================
+// Exe 4-1
+this.btn_Exe4_1_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 최상위에 새로운 Row 삽입 후 상태값 확인
+	var nRow = this.Dataset4.insertRow(0); // addRow : 마지막에 추가.
+	var rowType = this.Dataset4.getRowType(nRow);
+	this.txtRtn2.set_value("최상위에 새로운 row 삽입 후 삽입한 row 상태값: " + rowType);
+};
+
+// Exe 4-2
+this.btn_Exe4_2_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 두번째 row의 성명 칼럼을 Nexacro로 변경한 후 상태값 확인
+	this.Dataset4.setColumn(1, "FULL_NAME", "Nexacro");
+	var rowType = this.Dataset4.getRowType(1);
+	this.txtRtn2.set_value("두번째 row의 성명 칼럼을 Nexacro로 변경 후 상태값: " + rowType);
+};
+
+// Exe 4-3
+this.btn_Exe4_3_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sCurData = this.Dataset4.getColumn(1, "FULL_NAME");
+	var sOriginData = this.Dataset4.getOrgColumn(1, "FULL_NAME");
+	this.txtRtn2.set_value("변경되기 전과 후의 성명 데이터: " + sCurData + "," + sOriginData);
+};
+
+// Exe 4-4
+this.btn_Exe4_4_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// Row Index가 3, 4, 5인 레코드 멀티 삭제
+	var arr = [3, 4, 5];
+	this.Dataset4.deleteMultiRows(arr);
+};
+
+// Exe 4-5
+this.btn_Exe4_5_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 삭제한 레코드 개수와 삭제한 성명 데이터 구하기
+	var nDeletedColCnt = this.Dataset4.getDeletedRowCount();
+	var arr = new Array();
+	
+	for(var i = 0; i < nDeletedColCnt; i++) {
+		arr.push(this.Dataset4.getDeletedColumn(i, "FULL_NAME"));
+	}
+	this.txtRtn2.set_value("삭제한 레코드 개수와 삭제한 성명데이터: " + nDeletedColCnt + "," + arr);
+};
+
+
+// Exe4 - Data Check
+this.btn_Exe4_Check_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 데이터 변경 여부 체크
+	var rtn = this.fn_dataCheck(this.Dataset4);
+	this.alert(rtn);
+};
+
+this.fn_dataCheck = function(obj) {
+	if(obj.getDeletedRowCount() > 0) { // 삭제된 데이터가 있다면
+		return true;
+	}
+	
+	for(var i = 0; i < obj.rowcount; i++) {
+		var nRowType = obj.getRowType(i);
+		if(nRowType == 2 || nRowType == 4) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+// Exercise 5 ================================================================
+// Exe 5-1
+this.btn_Exe5_1_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// dataset4를 dataset5로 복사
+	this.Dataset5.copyData(this.Dataset4);
+	this.Grid5.createFormat(); // 이거까지 해줘야 화면에 데이터 나타남.
+};
+
+// Exe 5-2
+this.btn_Exe5_2_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// ex4에서 입력,수정한 정보 모두 복사
+	this.Dataset5.assign(this.Dataset4);
+	this.Grid5.createFormat();
+};
+
+// Exe 5-3
+this.btn_Exe5_3_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// dataset4에서 사원번호가 KR040인 row만 dataset5에 복사
+	var nRow = this.Dataset4.findRow("EMPL_ID", "KR040");
+	var toRow = this.Dataset5.addRow(); // 새 레코드 추가
+	
+	this.Dataset5.copyRow(toRow, this.Dataset4, nRow); // 
+};
+
+// Exe 5-4
+this.btn_Exe5_4_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 사원번호가 KR210인 row 중 성명과 사원번호 칼럼만 dataset5에 복사
+	var nRow = this.Dataset4.findRow("EMPL_ID", "KR040");
+	var toRow = this.Dataset5.addRow();
+	var sCol = "EMPL_ID=EMPL_ID, FULL_NAME=FULL_NAME";
+	this.Dataset5.copyRow(toRow, this.Dataset4, nRow, sCol); // 원하는 칼럼만 -> 4번쨰인자
+};
